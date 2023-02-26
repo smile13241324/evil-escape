@@ -42,6 +42,7 @@
 ;;   - quit ibuffer
 ;;   - quit image buffer
 ;;   - quit magit buffers
+;;   - quit transient
 ;;   - quit help buffers
 ;;   - quit apropos buffers
 ;;   - quit ert buffers
@@ -235,6 +236,7 @@ with a key sequence."
   (and evil-escape-key-sequence
        (not evil-escape-inhibit)
        (or (window-minibuffer-p)
+           (evil-escape--is-transient)
            (bound-and-true-p isearch-mode)
            (bound-and-true-p ctrlf--active-p)
            (memq major-mode '(ibuffer-mode
@@ -258,6 +260,9 @@ with a key sequence."
 (defun evil-escape--escape-normal-state ()
   "Return the function to escape from normal state."
   (cond
+   ;; Check for transients first because they override all key bindings by
+   ;; pushing to overriding-terminal-local-map.
+   ((evil-escape--is-transient) 'evil-escape--escape-with-C-g)
    ((and (fboundp 'helm-alive-p) (helm-alive-p)) 'helm-keyboard-quit)
    ((eq 'ibuffer-mode major-mode) 'ibuffer-quit)
    ((eq 'image-mode major-mode) 'quit-window)
@@ -285,6 +290,9 @@ with a key sequence."
 (defun evil-escape--escape-emacs-state ()
   "Return the function to escape from emacs state."
   (cond
+   ;; Check for transients first because they override all key bindings by
+   ;; pushing to overriding-terminal-local-map.
+   ((evil-escape--is-transient) 'evil-escape--escape-with-C-g)
    ((bound-and-true-p isearch-mode) 'isearch-abort)
    ((bound-and-true-p ctrlf--active-p) 'ctrlf-cancel)
    ((window-minibuffer-p) 'abort-recursive-edit)
@@ -359,9 +367,18 @@ with a key sequence."
   (interactive)
   (setq unread-command-events (listify-key-sequence "q")))
 
+(defun evil-escape--escape-with-C-g ()
+  "Send `C-g' key press event to exit from a transient."
+  (interactive)
+  (setq unread-command-events (listify-key-sequence (kbd "C-g"))))
+
 (defun evil-escape--is-magit-buffer ()
   "Return non nil if the current buffer is a Magit buffer."
   (string-match-p "magit" (symbol-name major-mode)))
+
+(defun evil-escape--is-transient ()
+  "Return non nil if a transient is active."
+  (memq (key-binding (kbd "C-g")) '(transient-quit-one transient-quit-seq)))
 
 (provide 'evil-escape)
 
