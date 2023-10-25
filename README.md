@@ -2,7 +2,7 @@
 [![MELPA](http://melpa.org/packages/evil-escape-badge.svg)](http://melpa.org/#/evil-escape)
 [![MELPA Stable](http://stable.melpa.org/packages/evil-escape-badge.svg)](http://stable.melpa.org/#/evil-escape)
 
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
 - [evil-escape](#evil-escape)
@@ -12,7 +12,7 @@
         - [Key sequence](#key-sequence)
         - [Delay between keys](#delay-between-keys)
         - [Unordered key sequence](#unordered-key-sequence)
-        - [Case-insensitive key sequence](#case-insensitive-key-sequence)
+        - [Case-Insensitive key sequence](#case-insensitive-key-sequence)
         - [Excluding a major mode](#excluding-a-major-mode)
         - [Enable only for a list of major modes](#enable-only-for-a-list-of-major-modes)
         - [Inhibit evil-escape](#inhibit-evil-escape)
@@ -22,6 +22,13 @@
 
 Customizable key sequence to escape from insert state and everything else in
 Emacs.
+
+This is a fork from the original evil-escape repo of [syl20bnr](https://github.com/syl20bnr/evil-escape)
+which has become stale. It tries to continue his work on this useful feature of emacs by modernizing
+the package and providing integrations for more packages.
+
+Version 3.17 is an improved version of 3.0 containing most of the fixes provided in PRs of the original
+repo as well as a lot of smaller updates to make the package adhere to the melpa standards.
 
 Version 3.0 is a rewrite of `evil-escape` and removes the previous limitations:
 - escape sequence can now be used in macros
